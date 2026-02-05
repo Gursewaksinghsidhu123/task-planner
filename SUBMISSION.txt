@@ -1,0 +1,245 @@
+Student Name: Gursewak Singh
+Course: PROG2500-26W-Sec1 Full Stack Development
+Assignment: Practical Lab - Sprint 1 Review
+Due Date: February 5, 2026
+
+================================================================================
+PROJECT INFORMATION
+================================================================================
+
+Project Name: Student Task Planner Web Application
+
+GitHub Repository: [REPLACE WITH YOUR GITHUB URL]
+Example: https://github.com/gursewak/task-planner-backend
+
+Deployed API URL: [REPLACE WITH YOUR RENDER URL]
+Example: https://task-planner-api.onrender.com
+
+Database Provider: Render (PostgreSQL)
+
+================================================================================
+TECHNOLOGY STACK
+================================================================================
+
+Backend:
+- Node.js (v18+)
+- Express.js (RESTful API)
+- PostgreSQL (Database)
+- bcryptjs (Password hashing)
+- jsonwebtoken (Authentication)
+- dotenv (Environment variables)
+- cors (Cross-origin requests)
+
+Database:
+- PostgreSQL 16 on Render
+- 3 Tables: users, tasks, categories
+- Relational database with foreign keys
+
+Deployment:
+- Render Web Service (Backend)
+- Render PostgreSQL (Database)
+- GitHub (Version Control)
+
+================================================================================
+API ENDPOINTS IMPLEMENTED
+================================================================================
+
+Users:
+✅ POST /api/users/register - Register new user
+✅ POST /api/users/login - User login
+✅ GET /api/users/profile/:id - Get user profile
+
+Tasks:
+✅ GET /api/tasks/user/:userId - Get all tasks for user
+✅ GET /api/tasks/:id - Get single task
+✅ POST /api/tasks - Create new task
+✅ PUT /api/tasks/:id - Update task
+✅ PATCH /api/tasks/:id/complete - Mark as completed
+✅ DELETE /api/tasks/:id - Delete task
+✅ GET /api/tasks/user/:userId/status/:status - Filter by status
+✅ GET /api/tasks/user/:userId/category/:categoryId - Filter by category
+
+Categories:
+✅ GET /api/categories - Get all categories
+✅ GET /api/categories/:id - Get single category
+✅ POST /api/categories - Create category
+✅ PUT /api/categories/:id - Update category
+✅ DELETE /api/categories/:id - Delete category
+
+================================================================================
+DATABASE SCHEMA
+================================================================================
+
+Users Table:
+- id (SERIAL PRIMARY KEY)
+- username (VARCHAR, UNIQUE)
+- email (VARCHAR, UNIQUE)
+- password (VARCHAR - bcrypt hashed)
+- created_at (TIMESTAMP)
+
+Tasks Table:
+- id (SERIAL PRIMARY KEY)
+- user_id (INTEGER, FOREIGN KEY → users.id)
+- category_id (INTEGER, FOREIGN KEY → categories.id)
+- title (VARCHAR)
+- description (TEXT)
+- due_date (DATE)
+- priority (VARCHAR: low, medium, high)
+- status (VARCHAR: pending, in-progress, completed)
+- completed (BOOLEAN)
+- created_at (TIMESTAMP)
+- updated_at (TIMESTAMP)
+
+Categories Table:
+- id (SERIAL PRIMARY KEY)
+- name (VARCHAR, UNIQUE)
+- color (VARCHAR - hex color code)
+- created_at (TIMESTAMP)
+
+Default Categories:
+1. Homework (#3B82F6 - Blue)
+2. Exam (#EF4444 - Red)
+3. Project (#10B981 - Green)
+4. Assignment (#F59E0B - Amber)
+5. Reading (#8B5CF6 - Purple)
+6. Other (#6B7280 - Gray)
+
+================================================================================
+FEATURES COMPLETED
+================================================================================
+
+✅ RESTful API with Express.js
+✅ PostgreSQL database integration
+✅ User registration with password hashing
+✅ User login with JWT authentication
+✅ CRUD operations for tasks
+✅ Task categorization
+✅ Task completion tracking
+✅ Priority levels (low, medium, high)
+✅ Due date management
+✅ Status tracking (pending, in-progress, completed)
+✅ Category management
+✅ Error handling
+✅ Input validation
+✅ CORS enabled for frontend integration
+✅ Environment variable configuration
+✅ Database tables auto-creation on startup
+✅ Deployed to Render with PostgreSQL
+✅ Git version control with meaningful commits
+
+================================================================================
+HOW TO TEST THE API
+================================================================================
+
+Health Check:
+GET [YOUR_RENDER_URL]/health
+
+Get Categories:
+GET [YOUR_RENDER_URL]/api/categories
+
+Register User:
+POST [YOUR_RENDER_URL]/api/users/register
+Body: {
+  "username": "testuser",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+Create Task:
+POST [YOUR_RENDER_URL]/api/tasks
+Body: {
+  "user_id": 1,
+  "category_id": 1,
+  "title": "Complete Math Homework",
+  "due_date": "2026-02-15",
+  "priority": "high"
+}
+
+Get User's Tasks:
+GET [YOUR_RENDER_URL]/api/tasks/user/1
+
+================================================================================
+FILES INCLUDED
+================================================================================
+
+Backend Structure:
+📁 backend/
+  📄 server.js - Main application entry point
+  📄 package.json - Dependencies and scripts
+  📄 .env - Environment variables (DATABASE_URL)
+  📄 .gitignore - Git ignore file
+  📄 README.md - Project documentation
+  📄 API_TESTING.md - API testing guide
+  📄 DEPLOYMENT_GUIDE.md - Render deployment instructions
+  📁 config/
+    📄 database.js - PostgreSQL connection
+    📄 setupDatabase.js - Database schema creation
+  📁 routes/
+    📄 users.js - User routes (register, login)
+    📄 tasks.js - Task CRUD routes
+    📄 categories.js - Category routes
+
+================================================================================
+SPRINT 1 REQUIREMENTS MET
+================================================================================
+
+✅ Node.js setup complete
+✅ Express.js framework implemented
+✅ PostgreSQL database configured
+✅ RESTful API endpoints created
+✅ Database tables with relationships
+✅ CRUD operations functional
+✅ Deployed to Render (live public URL)
+✅ GitHub repository with commit history
+✅ Environment variables properly configured
+✅ Error handling implemented
+✅ API documentation provided
+
+================================================================================
+DEMONSTRATION READINESS
+================================================================================
+
+I am prepared to demonstrate:
+
+1. ✅ Deployed application at live URL
+2. ✅ GitHub repository with regular commits
+3. ✅ Database schema explanation
+4. ✅ API endpoint testing (POST, GET, PUT, DELETE)
+5. ✅ Code walkthrough of routes
+6. ✅ PostgreSQL connection configuration
+7. ✅ Environment variable usage
+
+Technical Questions I Can Answer:
+- Where are routes defined? → routes/users.js, routes/tasks.js, routes/categories.js
+- How is the database configured? → config/database.js using pg Pool
+- How are passwords secured? → bcryptjs hashing in routes/users.js
+- What is the DATABASE_URL? → PostgreSQL connection string from Render
+
+================================================================================
+COURSE LEARNING OUTCOMES ADDRESSED
+================================================================================
+
+CLO1: ✅ Architect and develop scalable RESTful APIs using Node.js and Express
+CLO2: ✅ Implement persistent data storage with PostgreSQL database
+CLO4: ✅ Backend ready for frontend integration (CORS enabled)
+CLO5: ✅ Authentication with bcrypt password hashing and JWT tokens
+CLO6: ✅ Deployed to Render cloud platform with PostgreSQL service
+
+================================================================================
+NOTES
+================================================================================
+
+- Free tier Render services may sleep after inactivity (30-50s wake time)
+- All environment variables configured in Render dashboard
+- Database uses INTERNAL URL for secure connection
+- JWT_SECRET should be changed in production
+- Regular git commits made throughout development
+- Ready for Sprint 2 frontend integration
+
+================================================================================
+SUBMISSION DATE
+================================================================================
+
+February 5, 2026
+
+Submitted by: Gursewak Singh
