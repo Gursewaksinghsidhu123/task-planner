@@ -1,9 +1,8 @@
-# Node modules
-backend/node_modules/
+# Dependencies
 node_modules/
+package-lock.json
 
 # Environment variables
-backend/.env
 .env
 .env.local
 .env.development
@@ -19,17 +18,24 @@ yarn-error.log*
 # OS files
 .DS_Store
 Thumbs.db
-
-# IDE
-.vscode/
-.idea/
 *.swp
 *.swo
 *~
 
-# Build output
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Debug files
+debug-connection.js
+debug-url.js
+test-*.js
+
+# Temporary files
+*.tmp
+.cache/
+
+# Build output (if frontend is added)
 dist/
 build/
-
-# Package lock files (optional - some prefer to keep these)
-# backend/package-lock.json
