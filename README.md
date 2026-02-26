@@ -31,12 +31,19 @@ A RESTful API for managing student tasks built with Node.js, Express, and Postgr
 Task_Planner/
 ├── backend/
 │   ├── config/
-│   │   ├── database.js          # PostgreSQL connection
-│   │   └── setupDatabase.js     # Database schema & setup
+│   │   ├── database.js          # PostgreSQL connection pool
+│   │   └── setupDatabase.js     # Database schema & auto-setup
+│   ├── controllers/
+│   │   ├── usersController.js   # User business logic
+│   │   ├── tasksController.js   # Task business logic
+│   │   └── categoriesController.js # Category business logic
+│   ├── middleware/
+│   │   └── auth.js             # JWT authentication middleware
 │   ├── routes/
-│   │   ├── users.js            # User authentication routes
-│   │   ├── tasks.js            # Task CRUD routes
-│   │   └── categories.js       # Category routes
+│   │   ├── users.js            # User route definitions
+│   │   ├── tasks.js            # Task route definitions
+│   │   └── categories.js       # Category route definitions
+│   ├── postman_collection.json  # Postman collection for all endpoints
 │   ├── server.js               # Express server entry point
 │   └── package.json            # Dependencies
 ├── API.md                      # Complete API documentation
@@ -77,32 +84,44 @@ The API will be available at `http://localhost:5000`
 
 ### Health Check
 ```
-GET /health
+GET /health               - Server status
 ```
 
-### Users
+### Users (Public)
 ```
-POST /api/users/register  - Register new user
-POST /api/users/login     - User login (returns JWT)
-GET  /api/users/:id       - Get user details
-```
-
-### Tasks
-```
-GET    /api/tasks         - Get all tasks (requires user_id param)
-GET    /api/tasks/:id     - Get single task
-POST   /api/tasks         - Create new task
-PUT    /api/tasks/:id     - Update task
-DELETE /api/tasks/:id     - Delete task
+POST /api/users/register  - Register new user (returns JWT)
+POST /api/users/login     - Login (returns JWT)
 ```
 
-### Categories
+### Users (Protected — requires JWT)
 ```
-GET  /api/categories      - Get all categories
-POST /api/categories      - Create new category
+GET    /api/users         - Get all users
+GET    /api/users/:id     - Get user by ID
+PUT    /api/users/:id     - Update user
+DELETE /api/users/:id     - Delete user
+```
+
+### Tasks (All Protected — requires JWT)
+```
+GET    /api/tasks               - Get all tasks
+GET    /api/tasks/user/:userId  - Get tasks for a user
+GET    /api/tasks/:id           - Get task by ID
+POST   /api/tasks               - Create new task
+PUT    /api/tasks/:id           - Update task
+DELETE /api/tasks/:id           - Delete task
+```
+
+### Categories (Public reads, Protected writes)
+```
+GET    /api/categories     - Get all categories (public)
+GET    /api/categories/:id - Get category by ID (public)
+POST   /api/categories     - Create category (JWT required)
+PUT    /api/categories/:id - Update category (JWT required)
+DELETE /api/categories/:id - Delete category (JWT required)
 ```
 
 See [API.md](API.md) for complete documentation with request/response examples.
+Import [postman_collection.json](backend/postman_collection.json) into Postman to test all endpoints.
 
 ## 🗄️ Database Schema
 

@@ -1,0 +1,531 @@
+{
+  "info": {
+    "name": "Task Planner API",
+    "_postman_id": "task-planner-api-collection",
+    "description": "Student Task Planner RESTful API — PROG2500 Individual Project Phase 1\nAuthor: Gursewak\nBase URL: https://task-planner-api-hu8d.onrender.com\n\nUsage:\n1. Run POST /api/users/register or POST /api/users/login first.\n2. Copy the 'token' from the response.\n3. Set the 'token' collection variable to that value.\n4. All protected routes will automatically use it via {{token}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://task-planner-api-hu8d.onrender.com",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "Paste your JWT token here after logging in"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "GET / - API Info",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Returns API name, version, and available endpoints. No authentication required."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /health - Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Returns server status and current timestamp. No authentication required."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "POST /api/users/register - Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"gursewak\",\n  \"email\": \"gursewak@example.com\",\n  \"password\": \"SecurePass123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "register"]
+            },
+            "description": "Register a new user. Password is hashed with bcrypt before storage. Returns 201 Created with user data and JWT token."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/users/login - Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"gursewak@example.com\",\n  \"password\": \"SecurePass123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "login"]
+            },
+            "description": "Authenticate a user. Returns 200 OK with user info and JWT token. Copy the token value and set it as the 'token' collection variable."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/users - Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Returns all registered users (passwords excluded). Requires valid JWT. Returns 401 if no/invalid token."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/users/:id - Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1"]
+            },
+            "description": "Returns a single user by ID. Returns 404 if user not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/users/:id - Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"gursewak_updated\",\n  \"email\": \"gursewak_new@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1"]
+            },
+            "description": "Update username and/or email for a user. If 'password' is provided it will be re-hashed. Returns 404 if user not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/users/:id - Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "1"]
+            },
+            "description": "Delete a user by ID. All tasks belonging to this user are also deleted (ON DELETE CASCADE). Returns 404 if user not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/users/:id - 404 Not Found (edge case)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/99999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "99999"]
+            },
+            "description": "Demonstrates 404 status code when requesting a non-existent user ID."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/users - 401 Unauthorized (no token)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users"]
+            },
+            "description": "Demonstrates 401 Unauthorized when accessing a protected route without a JWT token."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tasks",
+      "item": [
+        {
+          "name": "GET /api/tasks - Get All Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks"]
+            },
+            "description": "Returns all tasks across all users with category info via JOIN. Returns 200 OK. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/tasks/user/:userId - Get Tasks by User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasks/user/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "user", "1"]
+            },
+            "description": "Returns all tasks for a specific user, ordered by due date. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/tasks/:id - Get Task by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "1"]
+            },
+            "description": "Returns a single task with category info. Returns 404 if not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/tasks - Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"category_id\": 1,\n  \"title\": \"Complete PROG2500 Assignment\",\n  \"description\": \"Finish the full-stack backend project\",\n  \"due_date\": \"2026-03-01\",\n  \"priority\": \"high\",\n  \"status\": \"pending\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks"]
+            },
+            "description": "Create a new task linked to a user and optional category. Returns 201 Created. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/tasks/:id - Update Task",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Complete PROG2500 Final Project\",\n  \"priority\": \"high\",\n  \"status\": \"in-progress\",\n  \"completed\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/tasks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "1"]
+            },
+            "description": "Update one or more fields of an existing task. Only provided fields are changed (COALESCE). Returns 404 if task not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/tasks/:id - Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasks/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "1"]
+            },
+            "description": "Permanently delete a task by ID. Returns 404 if task not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/tasks/:id - 404 Not Found (edge case)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/tasks/99999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "tasks", "99999"]
+            },
+            "description": "Demonstrates 404 status code when requesting a non-existent task ID."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "GET /api/categories - Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories"]
+            },
+            "description": "Returns all categories. No authentication required. Returns 200 OK."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/categories/:id - Get Category by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "1"]
+            },
+            "description": "Returns a single category by ID. Returns 404 if not found. No authentication required."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/categories - Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lab Work\",\n  \"color\": \"#10B981\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/categories",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories"]
+            },
+            "description": "Create a new category. Name must be unique. Returns 201 Created. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "PUT /api/categories/:id - Update Category",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lab Reports\",\n  \"color\": \"#059669\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/categories/7",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "7"]
+            },
+            "description": "Update a category's name and/or color. Returns 404 if not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE /api/categories/:id - Delete Category",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categories/7",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "7"]
+            },
+            "description": "Delete a category. Tasks linked to this category will have their category_id set to NULL (ON DELETE SET NULL). Returns 404 if not found. Requires valid JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /api/categories/:id - 404 Not Found (edge case)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/categories/99999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories", "99999"]
+            },
+            "description": "Demonstrates 404 status code when requesting a non-existent category ID."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

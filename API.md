@@ -2,12 +2,18 @@
 
 ## Base URL
 ```
-http://localhost:5000/api
+https://task-planner-api-hu8d.onrender.com/api
 ```
 
 ## Authentication
 
-All protected routes require a JWT token in the Authorization header:
+Public routes (no token required):
+- `POST /users/register`
+- `POST /users/login`
+- `GET /categories`
+- `GET /categories/:id`
+
+All other routes are **protected** and require a JWT token in the Authorization header:
 ```
 Authorization: Bearer <token>
 ```
@@ -22,17 +28,22 @@ Authorization: Bearer <token>
 **Request Body:**
 ```json
 {
-  "username": "john_doe",
-  "email": "john@example.com",
+  "username": "gursewak",
+  "email": "gursewak@example.com",
   "password": "securePassword123"
 }
 ```
 
-**Response:**
+**Response (201 Created):**
 ```json
 {
   "message": "User registered successfully",
-  "userId": 1,
+  "user": {
+    "id": 1,
+    "username": "gursewak",
+    "email": "gursewak@example.com",
+    "created_at": "2026-02-26T10:00:00.000Z"
+  },
   "token": "jwt_token_here"
 }
 ```
@@ -43,22 +54,39 @@ Authorization: Bearer <token>
 **Request Body:**
 ```json
 {
-  "email": "john@example.com",
+  "email": "gursewak@example.com",
   "password": "securePassword123"
 }
 ```
 
-**Response:**
+**Response (200 OK):**
 ```json
 {
   "message": "Login successful",
-  "token": "jwt_token_here",
   "user": {
     "id": 1,
-    "username": "john_doe",
-    "email": "john@example.com"
-  }
+    "username": "gursewak",
+    "email": "gursewak@example.com"
+  },
+  "token": "jwt_token_here"
 }
+```
+
+### Get All Users
+**GET** `/users`
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200 OK):**
+```json
+[
+  {
+    "id": 1,
+    "username": "gursewak",
+    "email": "gursewak@example.com",
+    "created_at": "2026-02-26T10:00:00.000Z"
+  }
+]
 ```
 
 ### Get User by ID
@@ -66,13 +94,56 @@ Authorization: Bearer <token>
 
 **Headers:** `Authorization: Bearer <token>`
 
-**Response:**
+**Response (200 OK):**
 ```json
 {
   "id": 1,
-  "username": "john_doe",
-  "email": "john@example.com",
-  "created_at": "2026-02-05T10:00:00.000Z"
+  "username": "gursewak",
+  "email": "gursewak@example.com",
+  "created_at": "2026-02-26T10:00:00.000Z"
+}
+```
+
+### Update User
+**PUT** `/users/:id`
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+  "username": "gursewak_updated",
+  "email": "gursewak_new@example.com"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "User updated successfully",
+  "user": {
+    "id": 1,
+    "username": "gursewak_updated",
+    "email": "gursewak_new@example.com",
+    "created_at": "2026-02-26T10:00:00.000Z"
+  }
+}
+```
+
+### Delete User
+**DELETE** `/users/:id`
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200 OK):**
+```json
+{
+  "message": "User deleted successfully",
+  "user": {
+    "id": 1,
+    "username": "gursewak",
+    "email": "gursewak@example.com"
+  }
 }
 ```
 
@@ -81,12 +152,11 @@ Authorization: Bearer <token>
 ## Task Endpoints
 
 ### Get All Tasks
-**GET** `/tasks?user_id=1`
+**GET** `/tasks`
 
-**Query Parameters:**
-- `user_id` (required) - User ID to filter tasks
+**Headers:** `Authorization: Bearer <token>`
 
-**Response:**
+**Response (200 OK):**
 ```json
 [
   {
@@ -95,20 +165,31 @@ Authorization: Bearer <token>
     "category_id": 1,
     "title": "Complete Assignment",
     "description": "Finish the math homework",
-    "due_date": "2026-02-10",
+    "due_date": "2026-02-28",
     "priority": "high",
     "status": "pending",
     "completed": false,
-    "created_at": "2026-02-05T10:00:00.000Z",
-    "updated_at": "2026-02-05T10:00:00.000Z"
+    "category_name": "Homework",
+    "category_color": "#3B82F6",
+    "created_at": "2026-02-26T10:00:00.000Z",
+    "updated_at": "2026-02-26T10:00:00.000Z"
   }
 ]
 ```
 
+### Get Tasks by User
+**GET** `/tasks/user/:userId`
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200 OK):** Same format as Get All Tasks, filtered by user.
+
 ### Get Task by ID
 **GET** `/tasks/:id`
 
-**Response:**
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200 OK):**
 ```json
 {
   "id": 1,
@@ -116,15 +197,19 @@ Authorization: Bearer <token>
   "category_id": 1,
   "title": "Complete Assignment",
   "description": "Finish the math homework",
-  "due_date": "2026-02-10",
+  "due_date": "2026-02-28",
   "priority": "high",
   "status": "pending",
-  "completed": false
+  "completed": false,
+  "category_name": "Homework",
+  "category_color": "#3B82F6"
 }
 ```
 
 ### Create Task
 **POST** `/tasks`
+
+**Headers:** `Authorization: Bearer <token>`
 
 **Request Body:**
 ```json
@@ -133,13 +218,13 @@ Authorization: Bearer <token>
   "category_id": 1,
   "title": "Study for Exam",
   "description": "Review chapters 1-5",
-  "due_date": "2026-02-15",
+  "due_date": "2026-03-01",
   "priority": "high",
   "status": "pending"
 }
 ```
 
-**Response:**
+**Response (201 Created):**
 ```json
 {
   "message": "Task created successfully",
@@ -149,7 +234,7 @@ Authorization: Bearer <token>
     "category_id": 1,
     "title": "Study for Exam",
     "description": "Review chapters 1-5",
-    "due_date": "2026-02-15",
+    "due_date": "2026-03-01",
     "priority": "high",
     "status": "pending",
     "completed": false
@@ -159,6 +244,8 @@ Authorization: Bearer <token>
 
 ### Update Task
 **PUT** `/tasks/:id`
+
+**Headers:** `Authorization: Bearer <token>`
 
 **Request Body:**
 ```json
@@ -170,7 +257,7 @@ Authorization: Bearer <token>
 }
 ```
 
-**Response:**
+**Response (200 OK):**
 ```json
 {
   "message": "Task updated successfully",
@@ -187,7 +274,9 @@ Authorization: Bearer <token>
 ### Delete Task
 **DELETE** `/tasks/:id`
 
-**Response:**
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200 OK):**
 ```json
 {
   "message": "Task deleted successfully"
@@ -201,26 +290,45 @@ Authorization: Bearer <token>
 ### Get All Categories
 **GET** `/categories`
 
-**Response:**
+*(No authentication required)*
+
+**Response (200 OK):**
 ```json
 [
   {
     "id": 1,
     "name": "Homework",
     "color": "#3B82F6",
-    "created_at": "2026-02-05T10:00:00.000Z"
+    "created_at": "2026-02-26T10:00:00.000Z"
   },
   {
     "id": 2,
     "name": "Exam",
     "color": "#EF4444",
-    "created_at": "2026-02-05T10:00:00.000Z"
+    "created_at": "2026-02-26T10:00:00.000Z"
   }
 ]
 ```
 
+### Get Category by ID
+**GET** `/categories/:id`
+
+*(No authentication required)*
+
+**Response (200 OK):**
+```json
+{
+  "id": 1,
+  "name": "Homework",
+  "color": "#3B82F6",
+  "created_at": "2026-02-26T10:00:00.000Z"
+}
+```
+
 ### Create Category
 **POST** `/categories`
+
+**Headers:** `Authorization: Bearer <token>`
 
 **Request Body:**
 ```json
@@ -230,7 +338,7 @@ Authorization: Bearer <token>
 }
 ```
 
-**Response:**
+**Response (201 Created):**
 ```json
 {
   "message": "Category created successfully",
@@ -242,16 +350,55 @@ Authorization: Bearer <token>
 }
 ```
 
+### Update Category
+**PUT** `/categories/:id`
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Request Body:**
+```json
+{
+  "name": "Lab Reports",
+  "color": "#059669"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "message": "Category updated successfully",
+  "category": {
+    "id": 7,
+    "name": "Lab Reports",
+    "color": "#059669"
+  }
+}
+```
+
+### Delete Category
+**DELETE** `/categories/:id`
+
+**Headers:** `Authorization: Bearer <token>`
+
+**Response (200 OK):**
+```json
+{
+  "message": "Category deleted successfully"
+}
+```
+
 ---
 
-## Status Codes
+## HTTP Status Codes
 
-- `200` - Success
-- `201` - Created
-- `400` - Bad Request
-- `401` - Unauthorized
-- `404` - Not Found
-- `500` - Internal Server Error
+| Code | Meaning |
+|------|---------|
+| `200` | OK — Request succeeded |
+| `201` | Created — Resource created successfully |
+| `400` | Bad Request — Missing or invalid input |
+| `401` | Unauthorized — Missing or invalid JWT token |
+| `404` | Not Found — Resource does not exist |
+| `500` | Internal Server Error — Unexpected server error |
 
 ## Priority Values
 
