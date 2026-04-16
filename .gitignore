@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-package-lock.json
 
 # Environment variables
 .env
@@ -28,14 +27,14 @@ Thumbs.db
 *.code-workspace
 
 # Debug files
-debug-connection.js
-debug-url.js
-test-*.js
+backend/debug-connection.js
+backend/debug-url.js
+backend/test-*.js
 
 # Temporary files
 *.tmp
 .cache/
 
-# Build output (if frontend is added)
+# Build output
 dist/
 build/
