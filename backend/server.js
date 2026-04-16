@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -24,19 +25,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Root route
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Student Task Planner API',
-    version: '1.0.0',
-    endpoints: {
-      users: '/api/users',
-      tasks: '/api/tasks',
-      categories: '/api/categories'
-    }
-  });
-});
-
 // Health check route
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
@@ -47,9 +35,12 @@ app.use('/api/users', usersRoutes);
 app.use('/api/tasks', tasksRoutes);
 app.use('/api/categories', categoriesRoutes);
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+// Serve the built React frontend for all non-API routes
+const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
+app.use(express.static(frontendDist));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(frontendDist, 'index.html'));
 });
 
 // Global error handler
