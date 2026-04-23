@@ -38,3 +38,6 @@ backend/test-*.js
 # Build output
 dist/
 build/
+
+# Claude Code local settings (never commit)
+.claude/
